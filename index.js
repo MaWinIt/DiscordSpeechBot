@@ -375,8 +375,18 @@ function speak_impl(voice_Connection, mapKey) {
             try {
                 let new_buffer = await convert_audio(buffer)
                 let out = await transcribe(new_buffer);
-                if (out != null)
-                    process_commands_query(out, mapKey, user.id);
+                var test = out.substring(out.indexOf(',\n  "text"') + 13, out.indexOf('"traits') - 5).toLowerCase();
+                console.log('outputted message:');
+                console.log(test);
+                
+                // if (test.startsWith("hausaufgaben")) {
+                //     var title = test.substring(12)
+                //     addToQueue(title, mapKey);
+                //     const val = guildMap.get(mapKey);
+                //     val.text_Channel.send('added to queue ' + title);
+                // }
+                if (test != null)
+                    process_commands_query(test, mapKey, user.id);
             } catch (e) {
                 console.log('tmpraw rename: ' + e)
             }
@@ -387,6 +397,8 @@ function speak_impl(voice_Connection, mapKey) {
 }
 
 function process_commands_query(query, mapKey, userid) {
+    console.log('query:');
+    console.log(query);
     if (!query || !query.length)
         return;
 
@@ -394,6 +406,8 @@ function process_commands_query(query, mapKey, userid) {
 
     const regex = /^music ([a-zA-Z]+)(.+?)?$/;
     const m = query.toLowerCase().match(regex);
+    console.log('m');
+    console.log(m);
     if (m && m.length) {
         const cmd = (m[1]||'').trim();
         const args = (m[2]||'').trim();
